@@ -10,6 +10,7 @@
         "filament/filament": "^4.0",
         "humaidem/filament-map-picker": "*",
         "laravel/framework": "^13.8",
+        "laravel/octane": "*",
         "laravel/tinker": "^3.0"
     },
     "require-dev": {
