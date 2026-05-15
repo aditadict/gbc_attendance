@@ -17,10 +17,10 @@ php artisan migrate --force
 echo "[entrypoint] Linking public storage..."
 php artisan storage:link 2>/dev/null || true
 
-echo "[entrypoint] Caching config / routes / views..."
+echo "[entrypoint] Caching config & routes..."
 php artisan config:cache
 php artisan route:cache
-php artisan view:cache
+# NOTE: view:cache dihapus — tidak kompatibel dengan Filament component registry
 
 # Gunakan Octane (Swoole) jika laravel/octane terinstall, fallback ke artisan serve
 if php artisan help octane:start > /dev/null 2>&1; then
