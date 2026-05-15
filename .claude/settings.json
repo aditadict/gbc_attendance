@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(grep -r '\\\\$view' /Users/adityaekaafriyanto/Herd/gbc_attendance/vendor/filament/filament/src/Pages/Page.php)",
+      "WebFetch(domain:filamentphp.com)",
+      "WebFetch(domain:github.com)",
+      "Bash(composer remove *)",
+      "Bash(php -l /Users/adityaekaafriyanto/Herd/gbc_attendance/app/Fields/BranchMapPicker.php)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "Bash(curl -s https://raw.githubusercontent.com/humaidem/filament-map-picker/main/src/Fields/OSMMap.php)",
+      "Bash(curl -s https://raw.githubusercontent.com/humaidem/filament-map-picker/main/resources/js/map-picker.js)",
+      "Bash(npm install *)",
+      "Bash(composer dump-autoload *)",
+      "Bash(composer test *)"
+    ]
+  }
+}

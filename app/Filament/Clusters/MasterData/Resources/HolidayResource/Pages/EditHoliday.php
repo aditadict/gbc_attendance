@@ -1,0 +1,17 @@
+<?php
+
+namespace App\Filament\Clusters\MasterData\Resources\HolidayResource\Pages;
+
+use App\Filament\Clusters\MasterData\Resources\HolidayResource;
+use Filament\Actions\DeleteAction;
+use Filament\Resources\Pages\EditRecord;
+
+class EditHoliday extends EditRecord
+{
+    protected static string $resource = HolidayResource::class;
+
+    protected function getHeaderActions(): array
+    {
+        return [DeleteAction::make()];
+    }
+}
