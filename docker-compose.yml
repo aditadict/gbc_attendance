@@ -23,10 +23,7 @@ services:
     restart: unless-stopped
     ports:
       - "0.0.0.0:5441:5432"   # host port 5441 (setelah 5440 atlasempower-postgres)
-    environment:
-      POSTGRES_DB: gbc_hris
-      POSTGRES_USER: gbc_hris
-      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    env_file: .env.docker      # POSTGRES_DB / POSTGRES_USER / POSTGRES_PASSWORD dibaca dari sini
     volumes:
       - pgdata:/var/lib/postgresql/data
     healthcheck:
