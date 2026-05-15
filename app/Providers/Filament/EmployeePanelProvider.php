@@ -8,6 +8,7 @@ use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
 use App\Filament\Employee\Pages\AttendanceHistoryPage;
 use App\Filament\Employee\Pages\CheckInPage;
+use App\Filament\Employee\Widgets\MonthlyAttendanceSummaryWidget;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
@@ -26,9 +27,10 @@ class EmployeePanelProvider extends PanelProvider
         return $panel
             ->id('employee')
             ->path('employee')
+            ->viteTheme('resources/css/filament/employee/theme.css')
             ->login()
             ->colors([
-                'primary' => Color::Blue,
+                'primary' => Color::Red,
             ])
             ->brandLogo(url('https://globalbahteracollege.com/wp-content/uploads/2023/09/A.-Full-Color-Logo.png'))
             ->brandLogoHeight('5rem')
@@ -37,6 +39,9 @@ class EmployeePanelProvider extends PanelProvider
             ->pages([
                 CheckInPage::class,
                 AttendanceHistoryPage::class,
+            ])
+            ->widgets([
+                MonthlyAttendanceSummaryWidget::class,
             ])
             ->middleware([
                 EncryptCookies::class,

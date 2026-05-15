@@ -53,4 +53,16 @@ class Employee extends Model
     {
         return $this->hasOne(Attendance::class)->whereDate('date', today());
     }
+
+    public function salaryComponents(): HasMany
+    {
+        return $this->hasMany(EmployeeSalaryComponent::class);
+    }
+
+    public function activeSalaryComponents(): HasMany
+    {
+        return $this->hasMany(EmployeeSalaryComponent::class)
+            ->where('effective_date', '<=', today())
+            ->where(fn ($q) => $q->whereNull('end_date')->orWhere('end_date', '>=', today()));
+    }
 }

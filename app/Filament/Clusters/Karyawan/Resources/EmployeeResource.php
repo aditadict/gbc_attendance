@@ -5,6 +5,7 @@ namespace App\Filament\Clusters\Karyawan\Resources;
 use App\Filament\Clusters\Karyawan\KaryawanCluster;
 use App\Filament\Clusters\Karyawan\Resources\EmployeeResource\Pages;
 use App\Filament\Clusters\Karyawan\Resources\EmployeeResource\RelationManagers\DetailRelationManager;
+use App\Filament\Clusters\Karyawan\Resources\EmployeeResource\RelationManagers\SalaryComponentsRelationManager;
 use App\Models\Branch;
 use App\Models\Department;
 use App\Models\Employee;
@@ -21,7 +22,6 @@ use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
-use Filament\Tables\Columns\BadgeColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
@@ -97,7 +97,7 @@ class EmployeeResource extends Resource
                         ->live(),
                     Select::make('position_id')
                         ->label('Jabatan')
-                        ->options(fn (Get $get) => Position::where('department_id', $get('department_id'))
+                        ->options(fn (Get $get) => Position::query()->where('department_id', '=', $get('department_id'))
                             ->pluck('name', 'id'))
                         ->searchable()
                         ->required(),
@@ -116,14 +116,14 @@ class EmployeeResource extends Resource
                 TextColumn::make('department.name')->label('Departemen')->searchable(),
                 TextColumn::make('position.name')->label('Jabatan')->searchable(),
                 TextColumn::make('work_type')->label('Tipe')->badge()
-                    ->color(fn ($state) => match ($state) {
-                        'WFO' => 'info',
-                        'WFH' => 'success',
-                        'Hybrid' => 'warning',
+                    ->color(fn (string $state) => match ($state) {
+                        'WFO'   => 'info',
+                        'WFH'   => 'success',
+                        default => 'warning',
                     }),
                 TextColumn::make('status')->label('Status')->badge()
-                    ->formatStateUsing(fn ($s) => $s === 'active' ? 'Aktif' : 'Tidak Aktif')
-                    ->color(fn ($s) => $s === 'active' ? 'success' : 'danger'),
+                    ->formatStateUsing(fn (string $state) => $state === 'active' ? 'Aktif' : 'Tidak Aktif')
+                    ->color(fn (string $state) => $state === 'active' ? 'success' : 'danger'),
                 TextColumn::make('join_date')->label('Tgl Bergabung')->date('d M Y')->sortable(),
             ])
             ->filters([
@@ -136,9 +136,12 @@ class EmployeeResource extends Resource
             ->toolbarActions([BulkActionGroup::make([DeleteBulkAction::make()])]);
     }
 
-    public static function getRelationManagers(): array
+    public static function getRelations(): array
     {
-        return [DetailRelationManager::class];
+        return [
+            DetailRelationManager::class,
+            SalaryComponentsRelationManager::class,
+        ];
     }
 
     public static function getPages(): array
