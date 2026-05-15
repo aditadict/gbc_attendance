@@ -11,7 +11,8 @@
       "Bash(curl -s https://raw.githubusercontent.com/humaidem/filament-map-picker/main/resources/js/map-picker.js)",
       "Bash(npm install *)",
       "Bash(composer dump-autoload *)",
-      "Bash(composer test *)"
+      "Bash(composer test *)",
+      "Bash(npm run *)"
     ]
   }
 }

@@ -114,13 +114,15 @@ class AttendanceResource extends Resource
                 TextColumn::make('status')->label('Status')->badge()
                     ->formatStateUsing(fn ($s) => match ($s) {
                         'present' => 'Hadir',
-                        'late' => 'Terlambat',
-                        'absent' => 'Tidak Hadir',
+                        'late'    => 'Terlambat',
+                        'absent'  => 'Tidak Hadir',
+                        default   => '-',
                     })
                     ->color(fn ($s) => match ($s) {
                         'present' => 'success',
-                        'late' => 'warning',
-                        'absent' => 'danger',
+                        'late'    => 'warning',
+                        'absent'  => 'danger',
+                        default   => 'gray',
                     }),
                 TextColumn::make('check_in_at')->label('Check-in')->time('H:i'),
                 TextColumn::make('check_out_at')->label('Check-out')->time('H:i'),

@@ -26,9 +26,10 @@ class EmployeePanelProvider extends PanelProvider
         return $panel
             ->id('employee')
             ->path('employee')
+            ->viteTheme('resources/css/filament/employee/theme.css')
             ->login()
             ->colors([
-                'primary' => Color::Blue,
+                'primary' => Color::Red,
             ])
             ->brandLogo(url('https://globalbahteracollege.com/wp-content/uploads/2023/09/A.-Full-Color-Logo.png'))
             ->brandLogoHeight('5rem')
