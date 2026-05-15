@@ -1,0 +1,46 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: gbc-hris-app:latest
+    container_name: gbc-hris-app
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:9007:8000"   # Caddy (native) akses via localhost:9007
+    env_file: .env.docker
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - storage:/var/www/html/storage/app
+    networks:
+      - gbc-hris-net
+
+  postgres:
+    image: postgres:16-alpine
+    container_name: gbc-hris-postgres
+    restart: unless-stopped
+    ports:
+      - "0.0.0.0:5441:5432"   # host port 5441 (setelah 5440 atlasempower-postgres)
+    environment:
+      POSTGRES_DB: gbc_hris
+      POSTGRES_USER: gbc_hris
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U gbc_hris"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - gbc-hris-net
+
+networks:
+  gbc-hris-net:
+    driver: bridge
+
+volumes:
+  pgdata:
+  storage:
