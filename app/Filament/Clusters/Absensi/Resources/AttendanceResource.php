@@ -110,15 +110,15 @@ class AttendanceResource extends Resource
                 TextColumn::make('employee.branch.name')->label('Cabang')->searchable(),
                 TextColumn::make('date')->label('Tanggal')->date('d M Y')->sortable(),
                 TextColumn::make('work_type')->label('Tipe')->badge()
-                    ->color(fn ($s) => $s === 'WFO' ? 'info' : 'success'),
+                    ->color(fn (string $state) => $state === 'WFO' ? 'info' : 'success'),
                 TextColumn::make('status')->label('Status')->badge()
-                    ->formatStateUsing(fn ($s) => match ($s) {
+                    ->formatStateUsing(fn (string $state) => match ($state) {
                         'present' => 'Hadir',
                         'late'    => 'Terlambat',
                         'absent'  => 'Tidak Hadir',
                         default   => '-',
                     })
-                    ->color(fn ($s) => match ($s) {
+                    ->color(fn (string $state) => match ($state) {
                         'present' => 'success',
                         'late'    => 'warning',
                         'absent'  => 'danger',
@@ -140,7 +140,7 @@ class AttendanceResource extends Resource
                     ->label('Tipe Kerja')
                     ->options(['WFO' => 'WFO', 'WFH' => 'WFH']),
                 Filter::make('date')
-                    ->form([
+                    ->schema([
                         DatePicker::make('from')->label('Dari Tanggal')->native(false),
                         DatePicker::make('until')->label('Sampai Tanggal')->native(false),
                     ])

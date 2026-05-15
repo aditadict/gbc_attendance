@@ -2,11 +2,11 @@
 
 namespace App\Filament\Employee\Pages;
 
+use App\Filament\Employee\Widgets\MonthlyAttendanceSummaryWidget;
 use App\Models\Attendance;
 use BackedEnum;
 use Filament\Pages\Page;
 use Filament\Support\Icons\Heroicon;
-use Filament\Tables\Columns\BadgeColumn;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Concerns\InteractsWithTable;
@@ -32,26 +32,31 @@ class AttendanceHistoryPage extends Page implements HasTable
 
     protected static ?int $navigationSort = 2;
 
+    public function getHeaderWidgets(): array
+    {
+        return [MonthlyAttendanceSummaryWidget::class];
+    }
+
     public function table(Table $table): Table
     {
         $employee = Auth::user()->employee;
 
         return $table
             ->query(
-                Attendance::where('employee_id', $employee?->id ?? 0)
+                Attendance::query()->where('employee_id', $employee?->id ?? 0)
             )
             ->columns([
                 TextColumn::make('date')->label('Tanggal')->date('d M Y')->sortable(),
                 TextColumn::make('work_type')->label('Tipe')->badge()
-                    ->color(fn ($s) => $s === 'WFO' ? 'info' : 'success'),
+                    ->color(fn (string $state) => $state === 'WFO' ? 'info' : 'success'),
                 TextColumn::make('status')->label('Status')->badge()
-                    ->formatStateUsing(fn ($s) => match ($s) {
+                    ->formatStateUsing(fn (string $state) => match ($state) {
                         'present' => 'Hadir',
                         'late'    => 'Terlambat',
                         'absent'  => 'Tidak Hadir',
                         default   => '-',
                     })
-                    ->color(fn ($s) => match ($s) {
+                    ->color(fn (string $state) => match ($state) {
                         'present' => 'success',
                         'late'    => 'warning',
                         'absent'  => 'danger',
@@ -69,7 +74,7 @@ class AttendanceHistoryPage extends Page implements HasTable
                     ->label('Status')
                     ->options(['present' => 'Hadir', 'late' => 'Terlambat', 'absent' => 'Tidak Hadir']),
                 Filter::make('date')
-                    ->form([
+                    ->schema([
                         DatePicker::make('from')->label('Dari')->native(false),
                         DatePicker::make('until')->label('Sampai')->native(false),
                     ])

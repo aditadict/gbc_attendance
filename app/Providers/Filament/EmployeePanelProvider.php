@@ -8,6 +8,7 @@ use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
 use App\Filament\Employee\Pages\AttendanceHistoryPage;
 use App\Filament\Employee\Pages\CheckInPage;
+use App\Filament\Employee\Widgets\MonthlyAttendanceSummaryWidget;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
@@ -38,6 +39,9 @@ class EmployeePanelProvider extends PanelProvider
             ->pages([
                 CheckInPage::class,
                 AttendanceHistoryPage::class,
+            ])
+            ->widgets([
+                MonthlyAttendanceSummaryWidget::class,
             ])
             ->middleware([
                 EncryptCookies::class,

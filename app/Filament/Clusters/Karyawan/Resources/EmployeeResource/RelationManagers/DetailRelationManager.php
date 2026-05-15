@@ -2,15 +2,21 @@
 
 namespace App\Filament\Clusters\Karyawan\Resources\EmployeeResource\RelationManagers;
 
+use Filament\Actions\CreateAction;
+use Filament\Actions\EditAction;
+use Filament\Actions\ViewAction;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TextInput;
+use Filament\Infolists\Components\ImageEntry;
+use Filament\Infolists\Components\TextEntry;
+use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
-use Filament\Forms\Components\Select;
-use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\Textarea;
 use Filament\Schemas\Schema;
-use Filament\Resources\RelationManagers\RelationManager;
+use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
@@ -68,21 +74,110 @@ class DetailRelationManager extends RelationManager
                     ->label('Foto Karyawan')
                     ->image()
                     ->directory('employees/photos')
-                    ->avatar()
+                    // allowed file types only jpg, jpeg, png with max size 2MB
+                    ->acceptedFileTypes(['image/jpeg', 'image/png'])
+                    ->maxSize(2048)
                     ->nullable(),
             ]),
         ]);
     }
 
+    public function infolist(Schema $schema): Schema
+    {
+        return $schema->components([
+            Section::make('Identitas')->schema([
+                Grid::make(3)->schema([
+                    TextEntry::make('nik')->label('NIK')->placeholder('—'),
+                    TextEntry::make('birth_place')->label('Tempat Lahir')->placeholder('—'),
+                    TextEntry::make('birth_date')->label('Tanggal Lahir')->date('d M Y')->placeholder('—'),
+                    TextEntry::make('gender')->label('Jenis Kelamin')
+                        ->formatStateUsing(fn(mixed $state) => match ($state) {
+                            'male'   => 'Laki-laki',
+                            'female' => 'Perempuan',
+                            default  => '—',
+                        }),
+                    TextEntry::make('blood_type')->label('Golongan Darah')->placeholder('—'),
+                    TextEntry::make('religion')->label('Agama')->placeholder('—'),
+                    TextEntry::make('marital_status')->label('Status Pernikahan')
+                        ->formatStateUsing(fn(mixed $state) => match ($state) {
+                            'single'   => 'Belum Menikah',
+                            'married'  => 'Menikah',
+                            'divorced' => 'Cerai Hidup',
+                            'widowed'  => 'Cerai Mati',
+                            default    => '—',
+                        }),
+                ]),
+                TextEntry::make('address')->label('Alamat')->placeholder('—')->columnSpanFull(),
+            ]),
+
+            Section::make('Kontak Darurat')->schema([
+                Grid::make(2)->schema([
+                    TextEntry::make('emergency_contact_name')->label('Nama Kontak Darurat')->placeholder('—'),
+                    TextEntry::make('emergency_contact_phone')->label('Telepon')->placeholder('—'),
+                ]),
+            ]),
+
+            Section::make('Informasi Bank')->schema([
+                Grid::make(3)->schema([
+                    TextEntry::make('bank_name')->label('Bank')->placeholder('—'),
+                    TextEntry::make('bank_account_number')->label('No. Rekening')->placeholder('—'),
+                    TextEntry::make('bank_account_name')->label('Atas Nama')->placeholder('—'),
+                ]),
+            ]),
+
+            Section::make('Foto')->schema([
+                ImageEntry::make('photo')->label('Foto'),
+            ])->visible(fn($record) => filled($record?->photo)),
+        ]);
+    }
+
     public function table(Table $table): Table
     {
-        return $table->columns([
-            TextColumn::make('nik')->label('NIK'),
-            TextColumn::make('birth_date')->label('Tgl Lahir')->date('d M Y'),
-            TextColumn::make('gender')->label('L/P')->formatStateUsing(fn ($s) => $s === 'male' ? 'L' : 'P'),
-            TextColumn::make('marital_status')->label('Status Nikah'),
-            TextColumn::make('bank_name')->label('Bank'),
-            TextColumn::make('bank_account_number')->label('No. Rekening'),
-        ]);
+        return $table
+            ->columns([
+                ImageColumn::make('photo')->label('Foto')->circular()->defaultImageUrl(null)
+                    ->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('nik')->label('NIK')->placeholder('—'),
+                TextColumn::make('birth_place')->label('Tempat Lahir')->placeholder('—')
+                    ->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('birth_date')->label('Tgl Lahir')->date('d M Y')->placeholder('—'),
+                TextColumn::make('gender')->label('Jenis Kelamin')
+                    ->formatStateUsing(fn(mixed $state) => match ($state) {
+                        'male'   => 'Laki-laki',
+                        'female' => 'Perempuan',
+                        default  => '—',
+                    }),
+                TextColumn::make('blood_type')->label('Gol. Darah')->placeholder('—')
+                    ->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('religion')->label('Agama')->placeholder('—')
+                    ->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('marital_status')->label('Status Nikah')
+                    ->formatStateUsing(fn(mixed $state) => match ($state) {
+                        'single'   => 'Belum Menikah',
+                        'married'  => 'Menikah',
+                        'divorced' => 'Cerai Hidup',
+                        'widowed'  => 'Cerai Mati',
+                        default    => '—',
+                    })
+                    ->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('emergency_contact_name')->label('Kontak Darurat')->placeholder('—')
+                    ->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('emergency_contact_phone')->label('Telp Darurat')->placeholder('—')
+                    ->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('bank_name')->label('Bank')->placeholder('—'),
+                TextColumn::make('bank_account_number')->label('No. Rekening')->placeholder('—'),
+                TextColumn::make('bank_account_name')->label('Atas Nama')->placeholder('—')
+                    ->toggleable(isToggledHiddenByDefault: true),
+            ])
+            ->headerActions([
+                CreateAction::make()
+                    ->label('Isi Data Detail')
+                    ->visible(fn() => ! $this->getOwnerRecord()->detail()->exists())
+                    ->using(fn(array $data) => $this->getOwnerRecord()->detail()->updateOrCreate([], $data)),
+            ])
+            ->recordActions([
+                ViewAction::make(),
+                EditAction::make(),
+            ]);
     }
 }

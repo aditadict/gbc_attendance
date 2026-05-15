@@ -12,7 +12,23 @@
       "Bash(npm install *)",
       "Bash(composer dump-autoload *)",
       "Bash(composer test *)",
-      "Bash(npm run *)"
+      "Bash(npm run *)",
+      "Bash(composer show *)",
+      "Bash(php -r \"require '/Users/adityaekaafriyanto/Herd/gbc_attendance/vendor/autoload.php'; new \\\\App\\\\Filament\\\\Clusters\\\\Karyawan\\\\Resources\\\\EmployeeResource\\\\RelationManagers\\\\SalaryComponentsRelationManager\\(\\);\")",
+      "Bash(grep -n 'fn \\($s\\)' /Users/adityaekaafriyanto/Herd/gbc_attendance/app/Filament/Clusters/Karyawan/Resources/EmployeeResource.php /Users/adityaekaafriyanto/Herd/gbc_attendance/app/Filament/Clusters/Absensi/Resources/AttendanceResource.php /Users/adityaekaafriyanto/Herd/gbc_attendance/app/Filament/Clusters/MasterData/Resources/SalaryComponentResource.php)",
+      "Bash(grep -rn 'fn \\($s\\)' /Users/adityaekaafriyanto/Herd/gbc_attendance/app/Filament/)",
+      "Bash(php -r \"require '/Users/adityaekaafriyanto/Herd/gbc_attendance/vendor/autoload.php'; echo 'autoload ok';\")",
+      "Bash(php -l app/Filament/Clusters/Karyawan/Resources/EmployeeResource/RelationManagers/SalaryComponentsRelationManager.php)",
+      "Bash(grep -v \"^$\")",
+      "Bash(grep -n 'shouldCheckPolicyExistence\\\\|shouldSkipAuthorization\\\\|$shouldCheck\\\\|$shouldSkip' /Users/adityaekaafriyanto/Herd/gbc_attendance/vendor/filament/filament/src/Resources/RelationManagers/RelationManager.php)",
+      "Bash(grep -n '$shouldCheck\\\\|$shouldSkip' /Users/adityaekaafriyanto/Herd/gbc_attendance/vendor/filament/filament/src/Resources/Concerns/InteractsWithRelationshipTable.php)",
+      "Bash(grep -rn '$shouldCheckPolicyExistence\\\\s*=\\\\|$shouldSkipAuthorization\\\\s*=' /Users/adityaekaafriyanto/Herd/gbc_attendance/vendor/filament/)",
+      "Bash(grep -rn 'protected static bool $shouldCheck\\\\|protected static bool $shouldSkip' /Users/adityaekaafriyanto/Herd/gbc_attendance/vendor/filament/)",
+      "Bash(php -l app/Filament/Clusters/Karyawan/Resources/EmployeeResource/RelationManagers/DetailRelationManager.php)",
+      "Bash(php -l app/Filament/Clusters/Penggajian/Resources/PayrollResource.php)",
+      "Bash(php -l app/Filament/Clusters/Penggajian/Resources/PayrollResource/Pages/CreatePayroll.php)",
+      "Bash(php -l app/Filament/Clusters/Penggajian/Resources/PayrollResource/Pages/ListPayrolls.php)",
+      "Bash(php -l app/Filament/Clusters/Penggajian/Resources/PayrollResource/Widgets/PayrollStatsWidget.php)"
     ]
   }
 }
